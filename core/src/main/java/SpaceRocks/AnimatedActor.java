@@ -54,6 +54,20 @@ public class AnimatedActor extends BaseActor
         setWidth( tex.getWidth() );
         setHeight( tex.getHeight() );
     }
+
+    public void copy(AnimatedActor original){
+        super.copy(original);
+        this.elapsedTime = 0;
+        this.animationStorage = original.animationStorage;
+        this.activeName = new String(original.activeName);
+        this.activeAnim = this.animationStorage.get(this.activeName);
+    }
+
+    public AnimatedActor clone(){
+        AnimatedActor newbie = new AnimatedActor();
+        newbie.copy(this);
+        return newbie;
+    }
     
     public String getAnimationName()
     {  

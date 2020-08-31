@@ -81,6 +81,21 @@ public class PhysicsActor extends AnimatedActor
         acceleration.add(amount * MathUtils.cosDeg(angle), amount*MathUtils.sinDeg(angle));
     }
 
+    public void copy(PhysicsActor original){
+        super.copy(original);
+        this.velocity = new Vector2(original.velocity);
+        this.acceleration = new Vector2(original.acceleration);
+        this.maxSpeed = original.maxSpeed;
+        this.deceleration = original.deceleration;
+        this.autoAngle = original.autoAngle;
+    }
+
+    public PhysicsActor clone(){
+        PhysicsActor newbie = new PhysicsActor();
+        newbie.copy(this);
+        return newbie;
+    }
+
     public void act(float dt) 
     {
         super.act(dt);

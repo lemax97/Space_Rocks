@@ -8,19 +8,24 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+
+import java.util.ArrayList;
 
 
-public class BaseActor extends Actor
+public class BaseActor extends Group
 {
     public TextureRegion region;
     public Polygon boundingPolygon;
+
+    private ArrayList<? extends BaseActor> parentList;
 
     public BaseActor()
     {
         super();
         region = new TextureRegion();
         boundingPolygon = null;
+        parentList = null;
     }
 
     public void setTexture(Texture t)
@@ -39,6 +44,10 @@ public class BaseActor extends Actor
         float[] vertices = {0,0, w,0, w,h, 0,h};
         boundingPolygon = new Polygon(vertices);
         boundingPolygon.setOrigin( getOriginX(), getOriginY() );
+    }
+
+    public void setParentList(ArrayList<? extends BaseActor> pl){
+        parentList = pl;
     }
 
     public void setEllipseBoundary()
@@ -98,9 +107,12 @@ public class BaseActor extends Actor
     {
         Color c = getColor();
         batch.setColor(c.r, c.g, c.b, c.a);
-        if ( isVisible() )
+        if ( isVisible() ){
             batch.draw( region, getX(), getY(), getOriginX(), getOriginY(),
                 getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation() );
+            super.draw(batch, parentAlpha);
+        }
+
     }
 
     public void copy(BaseActor original)
@@ -130,5 +142,18 @@ public class BaseActor extends Actor
 
         setOrigin(getWidth()/2, getHeight()/2);
 
+    }
+
+    public void moveToOrigin(BaseActor target){
+        this.setPosition(target.getX() + target.getOriginX() - this.getOriginX(),
+                target.getY() + target.getOriginY() - this.getOriginY());
+    }
+
+    public void destroy()
+    {
+        remove(); //removes self from Stage
+
+        if (parentList != null)
+            parentList.remove(this);
     }
 }
