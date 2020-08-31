@@ -92,6 +92,7 @@ public class GameScreen extends BaseScreen {
             laser.setVelocityAS(spaceship.getRotation(), 400);
             laserList.add(laser);
             laser.setParentList(laserList);
+
             mainStage.addActor(laser);
 
             laser.addAction(

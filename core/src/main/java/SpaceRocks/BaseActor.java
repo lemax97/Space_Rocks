@@ -117,7 +117,8 @@ public class BaseActor extends Group
 
     public void copy(BaseActor original)
     {
-        this.region = new TextureRegion( original.region );
+        if (original.region.getTexture() != null )
+            this.region = new TextureRegion( original.region );
         if (original.boundingPolygon != null)
 			this.boundingPolygon = new Polygon( original.boundingPolygon.getVertices() );
         this.setPosition( original.getX(), original.getY() );
