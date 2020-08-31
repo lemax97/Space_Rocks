@@ -1,10 +1,12 @@
 package SpaceRocks;
 
+import com.badlogic.gdx.Game;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class SpaceRocksGame extends BaseGame {
     @Override
     public void create() {
+        GameScreen gameScreen = new GameScreen(this);
+        setScreen(gameScreen);
 
     }
 }

@@ -77,6 +77,10 @@ public class PhysicsActor extends AnimatedActor
     public void setDeceleration(float d)
     {  deceleration = d;  }
 
+    public void addAccelerationAS(float angle, float amount){
+        acceleration.add(amount * MathUtils.cosDeg(angle), amount*MathUtils.sinDeg(angle));
+    }
+
     public void act(float dt) 
     {
         super.act(dt);

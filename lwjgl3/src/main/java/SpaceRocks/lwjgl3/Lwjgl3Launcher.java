@@ -1,8 +1,9 @@
 package SpaceRocks.lwjgl3;
 
+import SpaceRocks.GameScreen;
+import SpaceRocks.SpaceRocksGame;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import SpaceRocks.SpaceRocksGame;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {

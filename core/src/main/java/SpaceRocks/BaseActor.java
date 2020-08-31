@@ -122,5 +122,13 @@ public class BaseActor extends Actor
         BaseActor newbie = new BaseActor();
         newbie.copy( this );
         return newbie;
-    }	
+    }
+
+    public void setOriginCenter(){
+        if (getWidth() == 0)
+            System.err.println("error: actor size not set");
+
+        setOrigin(getWidth()/2, getHeight()/2);
+
+    }
 }
