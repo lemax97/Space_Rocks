@@ -4,6 +4,8 @@ package SpaceRocks;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
@@ -69,6 +71,40 @@ public class GameScreen extends BaseScreen {
 
         laserList = new ArrayList<PhysicsActor>();
         removeList = new ArrayList<BaseActor>();
+        rockList = new ArrayList<PhysicsActor>();
+        int numRocks = 6;
+        for (int n = 0; n < numRocks; n++) {
+            PhysicsActor rock = new PhysicsActor();
+            String filename = "rock" + (n%4) + ".png";
+            Texture rockTexture = new Texture(filename);
+            rockTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            rock.storeAnimation("default", rockTexture);
+
+            rock.setPosition(800 * MathUtils.random(), 600 * MathUtils.random());
+            rock.setOriginCenter();
+            rock.setEllipseBoundary();
+            rock.setAutoAngle(false);
+
+            float speedUp = MathUtils.random(0.0f, 1.0f);
+            rock.setVelocityAS(360 * MathUtils.random(), 75 + 50 * speedUp);
+            rock.addAction(Actions.forever(Actions.rotateBy(360, 2 - speedUp)));
+
+            mainStage.addActor(rock);
+            rockList.add(rock);
+            rock.setParentList(rockList);
+        }
+
+        baseExplosion = new AnimatedActor();
+        Animation explosionAnimation =
+                GameUtils.parseSpriteSheet("explosion.png",
+                        6,
+                        6,
+                        0.03f,
+                        Animation.PlayMode.NORMAL);
+        baseExplosion.storeAnimation("default", explosionAnimation);
+        baseExplosion.setWidth(96);
+        baseExplosion.setHeight(96);
+        baseExplosion.setOriginCenter();
 
         mainStage.addActor(spaceship);
     }
@@ -110,11 +146,30 @@ public class GameScreen extends BaseScreen {
             wraparound(laser);
             if (!laser.isVisible())
                 removeList.add(laser);
+            for (PhysicsActor rock: rockList){
+                if (laser.overlaps(rock, false)){
+                    removeList.add(laser);
+                    removeList.add(rock);
+                    AnimatedActor explosion = baseExplosion.clone();
+                    explosion.moveToOrigin(rock);
+                    mainStage.addActor(explosion);
+                    explosion.addAction(
+                            Actions.sequence(Actions.delay(1.08f),
+                                    Actions.removeActor()) );
+                }
+            }
         }
 
         for (BaseActor ba: removeList){
             ba.destroy();
         }
+
+        for (PhysicsActor rock: rockList){
+            wraparound(rock);
+        }
+
+
+
         wraparound(spaceship);
         rocketfire.setVisible(Gdx.input.isKeyPressed(Input.Keys.UP));
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
